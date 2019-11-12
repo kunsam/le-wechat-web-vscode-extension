@@ -163,7 +163,7 @@
         {
           "when": "editorTextFocus",
           "command": "LeWechatWebPlugin.getFileAppUrl",
-          "group": "navigation@5"
+          "group": "navigation@6"
         },
         {
           "when": "editorTextFocus",
