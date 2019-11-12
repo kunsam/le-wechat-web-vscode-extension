@@ -29,7 +29,7 @@
   },
   "dependencies": {
     "file-system": "^2.2.2",
-    "le-ts-code-tool": "^1.0.39",
+    "le-ts-code-tool": "^1.0.41",
     "lodash": "^4.17.15"
   },
   "activationEvents": [

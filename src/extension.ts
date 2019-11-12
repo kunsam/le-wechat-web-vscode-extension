@@ -69,7 +69,6 @@ export async function activate(context: vscode.ExtensionContext) {
         disableOpenCloseBrack: true
       });
       const text = ActionClassCoder.getActionClassSimpleByQueryString(qltext);
-      console.log(text, qltext, "text");
       vscode.env.clipboard.writeText(text).then(() => {
         vscode.window.showInformationMessage("成功复制到剪切板");
       });
@@ -113,7 +112,6 @@ export async function activate(context: vscode.ExtensionContext) {
         if (!ROOT_PATH.includes("/wechat-web")) {
           return;
         }
-
         if (leStoreManager) return;
         try {
           leStoreManager = new LeStoreManager();
@@ -151,10 +149,11 @@ export async function activate(context: vscode.ExtensionContext) {
   );
   vscode.commands.registerCommand(
     "LeWechatWebPlugin.refreshStoreManager",
-    () => {
+    async () => {
       if (!leStoreManager) {
-        vscode.window.showInformationMessage("请先激活Le-Store仓库管理");
-        return;
+        await vscode.commands.executeCommand(
+          "LeWechatWebPlugin.activeStoreManager"
+        );
       }
       leStoreManager.reset();
     }
