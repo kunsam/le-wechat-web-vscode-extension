@@ -89,6 +89,9 @@ export default class RoutersCommand {
       vscode.commands.registerCommand(
         "LeWechatWebPlugin.activeRouterManager",
         () => {
+          if (!ROOT_PATH.includes("/wechat-web")) {
+            return;
+          }
           if (this.kRouterTree) {
             return;
           }

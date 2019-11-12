@@ -6,6 +6,7 @@ import RoutersCommand from "./commands/router";
 import { ActionClassCoder } from "le-ts-code-tool";
 import LeStoreManager from "./commands/lestore/lestoremanager";
 import { PluginTreeDataProvider } from "./treeprovider";
+import { ROOT_PATH } from "./config";
 
 export async function activate(context: vscode.ExtensionContext) {
   vscode.window.createTreeView("LeWechatWebPlugin", {
@@ -109,6 +110,10 @@ export async function activate(context: vscode.ExtensionContext) {
     vscode.commands.registerCommand(
       "LeWechatWebPlugin.activeStoreManager",
       () => {
+        if (!ROOT_PATH.includes("/wechat-web")) {
+          return;
+        }
+
         if (leStoreManager) return;
         try {
           leStoreManager = new LeStoreManager();

@@ -3,9 +3,9 @@
   "publisher": "kunsam",
   "icon": "media/logo.png",
   "main": "./dist/extension.js",
-  "name": "le-wechat-web-plugin",
+  "name": "le-wechat-web-vscode-extension",
   "description": "letote wechat web code tool",
-  "repository": "https://github.com/kunsam/kunsam-react-code-tree.git",
+  "repository": "https://github.com/kunsam/le-wechat-web-vscode-extension.git",
   "engines": {
     "vscode": "^1.36.0"
   },
@@ -34,6 +34,13 @@
   },
   "activationEvents": [
     "onView:LeWechatWebPlugin",
+    "onCommand:LeWechatWebPlugin.activeRouterManager",
+    "onCommand:LeWechatWebPlugin.activeStoreManager",
+    "onCommand:LeWechatWebPlugin.SearchRouter",
+    "onCommand:LeWechatWebPlugin.showFileParentsInPick",
+    "onCommand:LeWechatWebPlugin.queryStoreManagedFields",
+    "onCommand:LeWechatWebPlugin.queryStoreConnectOutFields",
+    "onCommand:LeWechatWebPlugin.queryStoreAllFields",
     "onCommand:LeWechatWebPlugin.store.getActionClass",
     "onCommand:LeWechatWebPlugin.store.getActionClassByQueryString",
     "onCommand:LeWechatWebPlugin.store.getActionClassByQueryStringSimple"
@@ -142,24 +149,14 @@
       "commandPalette": [],
       "view/title": [
         {
-          "command": "LeWechatWebPlugin.activeRouterManager",
+          "command": "LeWechatWebPlugin.refreshRouterManager",
           "when": "view == LeWechatWebPlugin",
           "group": "myGroup@1"
         },
         {
-          "command": "LeWechatWebPlugin.refreshRouterManager",
-          "when": "view == LeWechatWebPlugin",
-          "group": "myGroup@2"
-        },
-        {
-          "command": "LeWechatWebPlugin.activeStoreManager",
-          "when": "view == LeWechatWebPlugin",
-          "group": "myGroup@3"
-        },
-        {
           "command": "LeWechatWebPlugin.refreshStoreManager",
           "when": "view == LeWechatWebPlugin",
-          "group": "myGroup@4"
+          "group": "myGroup@2"
         }
       ],
       "editor/context": [
