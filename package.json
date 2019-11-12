@@ -1,0 +1,243 @@
+{
+  "version": "0.0.1",
+  "publisher": "kunsam",
+  "icon": "media/logo.png",
+  "main": "./dist/extension.js",
+  "name": "le-wechat-web-plugin",
+  "description": "letote wechat web code tool",
+  "repository": "https://github.com/kunsam/kunsam-react-code-tree.git",
+  "engines": {
+    "vscode": "^1.36.0"
+  },
+  "scripts": {
+    "compile": "tsc -p ./",
+    "test-compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "publish": "vsce publish minor",
+    "webpack": "webpack --mode development",
+    "vscode:prepublish": "webpack --mode production",
+    "webpack-dev": "webpack --mode development --watch",
+    "add-vscode-type-on-master": "npx vscode-dts master"
+  },
+  "devDependencies": {
+    "webpack": "^4.41.2",
+    "ts-loader": "^6.2.0",
+    "webpack-cli": "^3.3.9",
+    "@types/node": "^10.12.21",
+    "@types/webpack": "^4.39.4",
+    "@types/lodash": "^4.14.144"
+  },
+  "dependencies": {
+    "lodash": "^4.17.15",
+    "file-system": "^2.2.2",
+    "le-ts-code-tool": "^1.0.37"
+  },
+  "activationEvents": [
+    "onView:kReactCodeTree",
+    "onCommand:extension.selectBracket",
+    "onCommand:kReactCodeTree.gotoRelative"
+  ],
+  "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "kReactCodeTree-explorer",
+          "title": "react代码树",
+          "icon": "media/dep.svg"
+        }
+      ]
+    },
+    "views": {
+      "kReactCodeTree-explorer": [
+        {
+          "id": "kReactCodeTree",
+          "name": "k React Code Tree"
+        }
+      ]
+    },
+    "commands": [
+      {
+        "command": "kReactCodeTree.refresh",
+        "title": "刷新 Workflow"
+      },
+      {
+        "command": "kReactCodeTree.insertAfter",
+        "title": "Insert After"
+      },
+      {
+        "command": "extension.selectBracket",
+        "title": "select bracket"
+      },
+      {
+        "command": "kReactCodeTree.gotoRelative",
+        "title": "Go to Relative import"
+      },
+      {
+        "command": "kReactCodeTree.insertIn",
+        "title": "Insert In"
+      },
+      {
+        "command": "kReactCodeTree.editNode",
+        "title": "Edit"
+      },
+      {
+        "command": "kReactRouterTree.SearchRouter",
+        "title": "Search Router"
+      },
+      {
+        "command": "extension.getKReactNodeCode",
+        "title": "* Get kReactCodeTree Node Code"
+      },
+      {
+        "command": "extension.getFileAppUrl",
+        "title": "* Get File App Url"
+      },
+      {
+        "command": "kReactRouterTree.showFileParentsInPick",
+        "title": "show file parents"
+      },
+      {
+        "command": "kReactCodeTree.queryStoreManagedFields",
+        "title": "query Store Managed Fields"
+      },
+      {
+        "command": "kReactCodeTree.queryStoreConnectOutFields",
+        "title": "query Store ConnectOut Fields"
+      },
+      {
+        "command": "kReactCodeTree.queryStoreAllFields",
+        "title": "query Store All Fields"
+      },
+      {
+        "command": "kReactCodeTree.activeStoreManager",
+        "title": "激活 StoreManager"
+      },
+      {
+        "command": "kReactCodeTree.activeRouterManager",
+        "title": "激活 RouterManager"
+      },
+      {
+        "command": "kReactCodeTree.refreshStoreManager",
+        "title": "刷新 StoreManager"
+      },
+      {
+        "command": "kReactCodeTree.store.getActionClassOldActionId",
+        "title": "* Get ActionClass By OldAction ID"
+      },
+      {
+        "command": "kReactCodeTree.store.getActionClassByQueryString",
+        "title": "* Get ActionClass By Query String"
+      },
+      {
+        "command": "kReactCodeTree.store.getActionClassByQueryStringSimple",
+        "title": "* Get ActionClass By Query String[简单版]"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "extension.selectBracket",
+        "key": "alt+a",
+        "mac": "alt+a",
+        "when": "editorTextFocus"
+      },
+      {
+        "command": "kReactCodeTree.gotoRelative",
+        "mac": "cmd+i cmd+i",
+        "key": "ctrl+i ctrl+i",
+        "when": "editorTextFocus"
+      },
+      {
+        "command": "kReactRouterTree.SearchRouter",
+        "mac": "cmd+o cmd+o",
+        "key": "ctrl+o ctrl+o"
+      },
+      {
+        "command": "kReactRouterTree.showFileParentsInPick",
+        "mac": "cmd+4 cmd+4",
+        "key": "ctrl+4 ctrl+4",
+        "when": "editorTextFocus"
+      },
+      {
+        "command": "kReactCodeTree.queryStoreManagedFields",
+        "mac": "cmd+o cmd+8",
+        "key": "ctrl+o ctrl+8"
+      },
+      {
+        "command": "kReactCodeTree.queryStoreConnectOutFields",
+        "mac": "cmd+o cmd+9",
+        "key": "ctrl+o ctrl+9"
+      },
+      {
+        "command": "kReactCodeTree.queryStoreAllFields",
+        "mac": "cmd+o cmd+0",
+        "key": "ctrl+o ctrl+0"
+      }
+    ],
+    "menus": {
+      "commandPalette": [],
+      "view/title": [
+        {
+          "command": "kReactCodeTree.refresh",
+          "when": "view == kReactCodeTree",
+          "group": "myGroup@1"
+        },
+        {
+          "command": "kReactCodeTree.activeRouterManager",
+          "when": "view == kReactCodeTree",
+          "group": "myGroup@2"
+        },
+        {
+          "command": "kReactCodeTree.activeStoreManager",
+          "when": "view == kReactCodeTree",
+          "group": "myGroup@3"
+        },
+        {
+          "command": "kReactCodeTree.refreshStoreManager",
+          "when": "view == kReactCodeTree",
+          "group": "myGroup@4"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "kReactCodeTree.insertAfter",
+          "when": "view == kReactCodeTree"
+        },
+        {
+          "command": "kReactCodeTree.insertIn",
+          "when": "view == kReactCodeTree"
+        },
+        {
+          "command": "kReactCodeTree.editNode",
+          "when": "view == kReactCodeTree"
+        }
+      ],
+      "editor/context": [
+        {
+          "when": "editorTextFocus",
+          "command": "extension.getKReactNodeCode",
+          "group": "navigation@6"
+        },
+        {
+          "when": "editorTextFocus",
+          "command": "extension.getFileAppUrl",
+          "group": "navigation@5"
+        },
+        {
+          "when": "editorTextFocus",
+          "command": "kReactCodeTree.store.getActionClassOldActionId",
+          "group": "navigation@7"
+        },
+        {
+          "when": "editorTextFocus",
+          "command": "kReactCodeTree.store.getActionClassByQueryString",
+          "group": "navigation@8"
+        },
+        {
+          "when": "editorTextFocus",
+          "command": "kReactCodeTree.store.getActionClassByQueryStringSimple",
+          "group": "navigation@9"
+        }
+      ]
+    }
+  }
+}
