@@ -1,10 +1,10 @@
 import * as fs from "fs";
-import * as fse from "file-system";
 import * as path from "path";
 import * as vscode from "vscode";
-import { ROOT_PATH, PROJECT_DIR } from "../../config";
+import * as fse from "file-system";
 import { pickFiles2Open } from "../../extensionUtil";
 import { LeActionManager, LeTsCode } from "le-ts-code-tool";
+import { ROOT_PATH, PROJECT_DIR, STORE_MANAGER_CONFIG } from "../../config";
 
 const CACHE_PATH = path.join(
   ROOT_PATH,
@@ -13,21 +13,10 @@ const CACHE_PATH = path.join(
 );
 
 export default class LeStoreManager {
-  loadConfig() {
-    const configPath = path.join(ROOT_PATH, PROJECT_DIR, "/store_config.js");
-    if (!fs.existsSync(configPath)) {
-      vscode.window.showErrorMessage("未找到仓库配置文件");
-      return;
-    }
-    return __non_webpack_require__(`${configPath}`);
-  }
-
   private _leActionManager: LeActionManager;
   public reset() {
-    const config = this.loadConfig();
-    config.projectDirPath = ROOT_PATH;
     if (!this._leActionManager) {
-      this._leActionManager = new LeActionManager(config, {
+      this._leActionManager = new LeActionManager(STORE_MANAGER_CONFIG, {
         useCache: true,
         loadCache: () => {
           if (fs.existsSync(CACHE_PATH)) {

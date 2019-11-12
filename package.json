@@ -28,147 +28,112 @@
     "@types/lodash": "^4.14.144"
   },
   "dependencies": {
-    "lodash": "^4.17.15",
     "file-system": "^2.2.2",
-    "le-ts-code-tool": "^1.0.37"
+    "le-ts-code-tool": "^1.0.39",
+    "lodash": "^4.17.15"
   },
   "activationEvents": [
-    "onView:kReactCodeTree",
-    "onCommand:extension.selectBracket",
-    "onCommand:kReactCodeTree.gotoRelative"
+    "onView:LeWechatWebPlugin",
+    "onCommand:LeWechatWebPlugin.store.getActionClass",
+    "onCommand:LeWechatWebPlugin.store.getActionClassByQueryString",
+    "onCommand:LeWechatWebPlugin.store.getActionClassByQueryStringSimple"
   ],
   "contributes": {
     "viewsContainers": {
       "activitybar": [
         {
-          "id": "kReactCodeTree-explorer",
-          "title": "react代码树",
+          "id": "LeWechatWebPlugin-explorer",
+          "title": "LeWechatWebPlugin",
           "icon": "media/dep.svg"
         }
       ]
     },
     "views": {
-      "kReactCodeTree-explorer": [
+      "LeWechatWebPlugin-explorer": [
         {
-          "id": "kReactCodeTree",
-          "name": "k React Code Tree"
+          "id": "LeWechatWebPlugin",
+          "name": "Wechat"
         }
       ]
     },
     "commands": [
       {
-        "command": "kReactCodeTree.refresh",
-        "title": "刷新 Workflow"
-      },
-      {
-        "command": "kReactCodeTree.insertAfter",
-        "title": "Insert After"
-      },
-      {
-        "command": "extension.selectBracket",
-        "title": "select bracket"
-      },
-      {
-        "command": "kReactCodeTree.gotoRelative",
-        "title": "Go to Relative import"
-      },
-      {
-        "command": "kReactCodeTree.insertIn",
-        "title": "Insert In"
-      },
-      {
-        "command": "kReactCodeTree.editNode",
-        "title": "Edit"
-      },
-      {
-        "command": "kReactRouterTree.SearchRouter",
+        "command": "LeWechatWebPlugin.SearchRouter",
         "title": "Search Router"
       },
       {
-        "command": "extension.getKReactNodeCode",
-        "title": "* Get kReactCodeTree Node Code"
-      },
-      {
-        "command": "extension.getFileAppUrl",
-        "title": "* Get File App Url"
-      },
-      {
-        "command": "kReactRouterTree.showFileParentsInPick",
+        "command": "LeWechatWebPlugin.showFileParentsInPick",
         "title": "show file parents"
       },
       {
-        "command": "kReactCodeTree.queryStoreManagedFields",
+        "command": "LeWechatWebPlugin.queryStoreManagedFields",
         "title": "query Store Managed Fields"
       },
       {
-        "command": "kReactCodeTree.queryStoreConnectOutFields",
+        "command": "LeWechatWebPlugin.queryStoreConnectOutFields",
         "title": "query Store ConnectOut Fields"
       },
       {
-        "command": "kReactCodeTree.queryStoreAllFields",
+        "command": "LeWechatWebPlugin.queryStoreAllFields",
         "title": "query Store All Fields"
       },
       {
-        "command": "kReactCodeTree.activeStoreManager",
+        "command": "LeWechatWebPlugin.activeStoreManager",
         "title": "激活 StoreManager"
       },
       {
-        "command": "kReactCodeTree.activeRouterManager",
+        "command": "LeWechatWebPlugin.activeRouterManager",
         "title": "激活 RouterManager"
       },
       {
-        "command": "kReactCodeTree.refreshStoreManager",
+        "command": "LeWechatWebPlugin.refreshRouterManager",
+        "title": "刷新 RouterManager"
+      },
+      {
+        "command": "LeWechatWebPlugin.refreshStoreManager",
         "title": "刷新 StoreManager"
       },
       {
-        "command": "kReactCodeTree.store.getActionClassOldActionId",
-        "title": "* Get ActionClass By OldAction ID"
+        "command": "LeWechatWebPlugin.getFileAppUrl",
+        "title": "[Le Wechat] 获得本文件访问链接(url)"
       },
       {
-        "command": "kReactCodeTree.store.getActionClassByQueryString",
-        "title": "* Get ActionClass By Query String"
+        "command": "LeWechatWebPlugin.store.getActionClassOldActionId",
+        "title": "[Le Wechat] 获得 ActionClass By OldAction ID"
       },
       {
-        "command": "kReactCodeTree.store.getActionClassByQueryStringSimple",
-        "title": "* Get ActionClass By Query String[简单版]"
+        "command": "LeWechatWebPlugin.store.getActionClassByQueryString",
+        "title": "[Le Wechat] Get ActionClass By Query String"
+      },
+      {
+        "command": "LeWechatWebPlugin.store.getActionClassByQueryStringSimple",
+        "title": "[Le Wechat] Get ActionClass By Query String[简单版]"
       }
     ],
     "keybindings": [
       {
-        "command": "extension.selectBracket",
-        "key": "alt+a",
-        "mac": "alt+a",
-        "when": "editorTextFocus"
-      },
-      {
-        "command": "kReactCodeTree.gotoRelative",
-        "mac": "cmd+i cmd+i",
-        "key": "ctrl+i ctrl+i",
-        "when": "editorTextFocus"
-      },
-      {
-        "command": "kReactRouterTree.SearchRouter",
+        "command": "LeWechatWebPlugin.SearchRouter",
         "mac": "cmd+o cmd+o",
         "key": "ctrl+o ctrl+o"
       },
       {
-        "command": "kReactRouterTree.showFileParentsInPick",
+        "command": "LeWechatWebPlugin.showFileParentsInPick",
         "mac": "cmd+4 cmd+4",
         "key": "ctrl+4 ctrl+4",
         "when": "editorTextFocus"
       },
       {
-        "command": "kReactCodeTree.queryStoreManagedFields",
+        "command": "LeWechatWebPlugin.queryStoreManagedFields",
         "mac": "cmd+o cmd+8",
         "key": "ctrl+o ctrl+8"
       },
       {
-        "command": "kReactCodeTree.queryStoreConnectOutFields",
+        "command": "LeWechatWebPlugin.queryStoreConnectOutFields",
         "mac": "cmd+o cmd+9",
         "key": "ctrl+o ctrl+9"
       },
       {
-        "command": "kReactCodeTree.queryStoreAllFields",
+        "command": "LeWechatWebPlugin.queryStoreAllFields",
         "mac": "cmd+o cmd+0",
         "key": "ctrl+o ctrl+0"
       }
@@ -177,64 +142,45 @@
       "commandPalette": [],
       "view/title": [
         {
-          "command": "kReactCodeTree.refresh",
-          "when": "view == kReactCodeTree",
+          "command": "LeWechatWebPlugin.activeRouterManager",
+          "when": "view == LeWechatWebPlugin",
           "group": "myGroup@1"
         },
         {
-          "command": "kReactCodeTree.activeRouterManager",
-          "when": "view == kReactCodeTree",
+          "command": "LeWechatWebPlugin.refreshRouterManager",
+          "when": "view == LeWechatWebPlugin",
           "group": "myGroup@2"
         },
         {
-          "command": "kReactCodeTree.activeStoreManager",
-          "when": "view == kReactCodeTree",
+          "command": "LeWechatWebPlugin.activeStoreManager",
+          "when": "view == LeWechatWebPlugin",
           "group": "myGroup@3"
         },
         {
-          "command": "kReactCodeTree.refreshStoreManager",
-          "when": "view == kReactCodeTree",
+          "command": "LeWechatWebPlugin.refreshStoreManager",
+          "when": "view == LeWechatWebPlugin",
           "group": "myGroup@4"
-        }
-      ],
-      "view/item/context": [
-        {
-          "command": "kReactCodeTree.insertAfter",
-          "when": "view == kReactCodeTree"
-        },
-        {
-          "command": "kReactCodeTree.insertIn",
-          "when": "view == kReactCodeTree"
-        },
-        {
-          "command": "kReactCodeTree.editNode",
-          "when": "view == kReactCodeTree"
         }
       ],
       "editor/context": [
         {
           "when": "editorTextFocus",
-          "command": "extension.getKReactNodeCode",
-          "group": "navigation@6"
-        },
-        {
-          "when": "editorTextFocus",
-          "command": "extension.getFileAppUrl",
+          "command": "LeWechatWebPlugin.getFileAppUrl",
           "group": "navigation@5"
         },
         {
           "when": "editorTextFocus",
-          "command": "kReactCodeTree.store.getActionClassOldActionId",
+          "command": "LeWechatWebPlugin.store.getActionClassOldActionId",
           "group": "navigation@7"
         },
         {
           "when": "editorTextFocus",
-          "command": "kReactCodeTree.store.getActionClassByQueryString",
+          "command": "LeWechatWebPlugin.store.getActionClassByQueryString",
           "group": "navigation@8"
         },
         {
           "when": "editorTextFocus",
-          "command": "kReactCodeTree.store.getActionClassByQueryStringSimple",
+          "command": "LeWechatWebPlugin.store.getActionClassByQueryStringSimple",
           "group": "navigation@9"
         }
       ]

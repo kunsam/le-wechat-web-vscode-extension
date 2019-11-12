@@ -3,14 +3,14 @@ import * as fse from "file-system";
 import * as path from "path";
 import * as vscode from "vscode";
 import { ROOT_PATH, PROJECT_DIR } from "../../config";
-import {
-  pickFiles2Open,
-  getFileAbsolutePath,
-  GotoTextDocument
-} from "../../extensionUtil";
-import { groupBy } from "lodash";
+import { pickFiles2Open, GotoTextDocument } from "../../extensionUtil";
 import { ShowFileParentsInPickDataNode } from "./type";
-import { KRouterTree, LeTsCode } from "le-ts-code-tool";
+import {
+  KRouterTree,
+  LeTsCode,
+  LeWechatWebUtil,
+  FileImportUtil
+} from "le-ts-code-tool";
 
 const AllIMPORTS_CACHE_PATH = path.join(
   ROOT_PATH,
@@ -26,77 +26,95 @@ export default class RoutersCommand {
   > = new Map();
 
   loadRouters() {
-    const ROUTER_FILE_ABS_PATH = path.join(
-      ROOT_PATH,
-      PROJECT_DIR,
-      "/router_config.js"
-    );
-    if (!fs.existsSync(ROUTER_FILE_ABS_PATH)) {
-      vscode.window.showErrorMessage(
-        `未找到路由配置文件 ${path.join(PROJECT_DIR, "/router_config.js")}`
-      );
-      return;
+    const results = LeWechatWebUtil.ResolveRouterConfig([
+      "/Users/kunsam/Downloads/le-project/wechat-web/src/app/router/routerConfig.tsx"
+    ]);
+    return results;
+  }
+
+  async initKRouterTree() {
+    function getCacheAllImports() {
+      if (fs.existsSync(AllIMPORTS_CACHE_PATH)) {
+        const allImports: LeTsCode.FileImportResultWithClass[] = __non_webpack_require__(
+          `${AllIMPORTS_CACHE_PATH}`
+        );
+        return allImports;
+      }
+      return undefined;
     }
-    return __non_webpack_require__(`${ROUTER_FILE_ABS_PATH}`);
+    const cacheImports = getCacheAllImports();
+    this.kRouterTree = new KRouterTree(this.loadRouters(), {
+      projectDirPath: ROOT_PATH,
+      getCacheAllImports: () => cacheImports,
+      writeCacheAllImports: (
+        allImports: LeTsCode.FileImportResultWithClass[]
+      ) => {
+        fse.writeFileSync(
+          AllIMPORTS_CACHE_PATH,
+          JSON.stringify(allImports, null, 2)
+        );
+      }
+    });
+    if (cacheImports) {
+      await this.kRouterTree.initQueryMap();
+    } else {
+      vscode.window
+        .withProgress(
+          {
+            location: vscode.ProgressLocation.Notification,
+            title: "首次计算中...",
+            cancellable: true
+          },
+          (_, token) => {
+            token.onCancellationRequested(() => {
+              console.log("User canceled the long running operation");
+            });
+            var p = new Promise(resolve => {
+              this.kRouterTree.initQueryMap().then(() => {
+                resolve();
+              });
+            });
+            return p;
+          }
+        )
+        .then(() => {
+          vscode.window.showInformationMessage("激活成功!");
+        });
+    }
   }
 
   constructor(context: vscode.ExtensionContext) {
     this.initCommands(context);
     context.subscriptions.push(
       vscode.commands.registerCommand(
-        "kReactCodeTree.activeRouterManager",
-        async () => {
+        "LeWechatWebPlugin.activeRouterManager",
+        () => {
           if (this.kRouterTree) {
             return;
           }
-          function getCacheAllImports() {
-            if (fs.existsSync(AllIMPORTS_CACHE_PATH)) {
-              const allImports: LeTsCode.FileImportResultWithClass[] = __non_webpack_require__(
-                `${AllIMPORTS_CACHE_PATH}`
-              );
-              return allImports;
-            }
-            return undefined;
-          }
-          const cacheImports = getCacheAllImports();
-          this.kRouterTree = new KRouterTree(this.loadRouters(), {
-            projectDirPath: ROOT_PATH,
-            getCacheAllImports: () => cacheImports,
-            writeCacheAllImports: (
-              allImports: LeTsCode.FileImportResultWithClass[]
-            ) => {
-              fse.writeFileSync(
-                AllIMPORTS_CACHE_PATH,
-                JSON.stringify(allImports, null, 2)
-              );
-            }
-          });
-          if (cacheImports) {
-            await this.kRouterTree.initQueryMap();
-          } else {
-            vscode.window
-              .withProgress(
-                {
-                  location: vscode.ProgressLocation.Notification,
-                  title: "首次计算中...",
-                  cancellable: true
-                },
-                (_, token) => {
-                  token.onCancellationRequested(() => {
-                    console.log("User canceled the long running operation");
-                  });
-                  var p = new Promise(resolve => {
-                    this.kRouterTree.initQueryMap().then(() => {
-                      resolve();
-                    });
-                  });
-                  return p;
-                }
-              )
-              .then(() => {
-                vscode.window.showInformationMessage("激活成功!");
+          vscode.window.withProgress(
+            {
+              location: vscode.ProgressLocation.Notification,
+              title: "初始化中..."
+            },
+            () => {
+              return new Promise(resolve => {
+                this.initKRouterTree().then(() => {
+                  resolve();
+                });
               });
-          }
+            }
+          );
+        }
+      )
+    );
+
+    context.subscriptions.push(
+      vscode.commands.registerCommand(
+        "LeWechatWebPlugin.refreshRouterManager",
+        () => {
+          this.kRouterTree = undefined;
+          this.initKRouterTree();
         }
       )
     );
@@ -105,11 +123,11 @@ export default class RoutersCommand {
   initCommands(context: vscode.ExtensionContext) {
     context.subscriptions.push(
       vscode.commands.registerCommand(
-        "kReactRouterTree.showFileParentsInPick",
+        "LeWechatWebPlugin.showFileParentsInPick",
         async () => {
           if (!this.kRouterTree) {
             await vscode.commands.executeCommand(
-              "kReactCodeTree.activeRouterManager"
+              "LeWechatWebPlugin.activeRouterManager"
             );
           }
 
@@ -159,16 +177,15 @@ export default class RoutersCommand {
     // 右键菜单 getFileAppUrl
     context.subscriptions.push(
       vscode.commands.registerCommand(
-        "extension.getFileAppUrl",
+        "LeWechatWebPlugin.getFileAppUrl",
         async (uri: vscode.Uri) => {
           if (!this.kRouterTree) {
             await vscode.commands.executeCommand(
-              "kReactCodeTree.activeRouterManager"
+              "LeWechatWebPlugin.activeRouterManager"
             );
           }
           const routers = this.kRouterTree.queryFileAppUrl(uri.fsPath);
           if (routers) {
-            // TODO 增加一个端口配置
             vscode.env.clipboard.writeText(
               routers.map(r => "https://localhost:3000" + r).join("\n")
             );
@@ -182,11 +199,11 @@ export default class RoutersCommand {
     // 快捷键搜索
     context.subscriptions.push(
       vscode.commands.registerCommand(
-        "kReactRouterTree.SearchRouter",
+        "LeWechatWebPlugin.SearchRouter",
         async () => {
           if (!this.kRouterTree) {
             await vscode.commands.executeCommand(
-              "kReactCodeTree.activeRouterManager"
+              "LeWechatWebPlugin.activeRouterManager"
             );
           }
           const result: any = await vscode.window.showQuickPick(
@@ -204,7 +221,11 @@ export default class RoutersCommand {
               result.label
             );
             if (componentRelativePath) {
-              const filePath = getFileAbsolutePath(componentRelativePath);
+              const filePath = FileImportUtil.getFileAbsolutePath(
+                componentRelativePath,
+                ROOT_PATH,
+                true
+              );
               GotoTextDocument(filePath);
             }
           }

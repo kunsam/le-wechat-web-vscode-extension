@@ -1,66 +1,7 @@
-import * as fs from "fs";
-import * as path from "path";
 import * as vscode from "vscode";
+import { FileImportUtil } from "le-ts-code-tool";
 import { ROOT_PATH } from "./config";
 
-/**
- * 获取文件绝对路径
- *
- * @export
- * @param {string} filePath
- * @param {boolean} [isRelative=true]
- * @returns
- */
-export function getFileAbsolutePath(filePath: string, isRelative = true) {
-  // 没带后缀
-  let fsPath = isRelative
-    ? path.resolve(path.join(ROOT_PATH, filePath))
-    : filePath;
-  fsPath = fsPath.replace(/\'|\"/g, "");
-  let trueFsPath = "";
-  // console.log(fsPath, fs.existsSync(fsPath), "fs.existsSync(fsPath)");
-  // /Users/kunsam/Downloads/le-project/wechat-web/src/app/components/customer_photos/customer_photos_in_home/item.jsx
-  if (fs.existsSync(fsPath)) {
-    if (fs.statSync(fsPath).isDirectory()) {
-      let NoneJSIndexes = [];
-      fs.readdirSync(fsPath).forEach(f => {
-        if (f.includes("index")) {
-          if (/\.(jsx?|tsx?)$/g.test(f)) {
-            trueFsPath = path.join(fsPath, f);
-          } else {
-            NoneJSIndexes.push(path.join(fsPath, f));
-          }
-        }
-      });
-      if (!trueFsPath && NoneJSIndexes.length) {
-        NoneJSIndexes.forEach(indexPath => {
-          if (/\.(s?css|less|sass)$/g.test(indexPath)) {
-            trueFsPath = indexPath;
-          }
-        });
-      }
-    } else {
-      trueFsPath = fsPath;
-    }
-  } else {
-    // 可能是由没带后缀引起的
-    const dirName = path.dirname(fsPath);
-    if (fs.existsSync(dirName)) {
-      fs.readdirSync(dirName).every(f => {
-        // 只判断这两种类型
-        if (/\.(jsx?|tsx?)$/g.test(f)) {
-          if (f.split(".")[0] === path.basename(fsPath)) {
-            if (!fs.statSync(path.join(dirName, f)).isDirectory()) {
-              trueFsPath = path.join(dirName, f);
-            }
-          }
-        }
-        return !trueFsPath;
-      });
-    }
-  }
-  return trueFsPath;
-}
 /**
  * vscode打开文件[绝对路径]
  *
@@ -114,11 +55,17 @@ export function pickFiles2Open(
   if (files.length === 1 && isOpenFirst) {
     if (files[0].location) {
       GotoTextDocument(
-        getFileAbsolutePath(files[0].location.filePath, false),
+        FileImportUtil.getFileAbsolutePath(
+          files[0].location.filePath,
+          ROOT_PATH,
+          false
+        ),
         files[0].location
       );
     }
-    GotoTextDocument(getFileAbsolutePath(files[0].target, false));
+    GotoTextDocument(
+      FileImportUtil.getFileAbsolutePath(files[0].target, ROOT_PATH, false)
+    );
   } else {
     if (files.length) {
       vscode.window
@@ -128,12 +75,22 @@ export function pickFiles2Open(
         .then(result => {
           if (result && result.location) {
             GotoTextDocument(
-              getFileAbsolutePath(result.location.filePath, false),
+              FileImportUtil.getFileAbsolutePath(
+                result.location.filePath,
+                ROOT_PATH,
+                false
+              ),
               result.location
             );
           }
           if (result && result.target) {
-            GotoTextDocument(getFileAbsolutePath(result.target, false));
+            GotoTextDocument(
+              FileImportUtil.getFileAbsolutePath(
+                result.target,
+                ROOT_PATH,
+                false
+              )
+            );
           }
         });
     }
